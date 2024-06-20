@@ -5,27 +5,40 @@ Prime Game
 
 
 def isWinner(x, nums):
-    """Prime Game"""
-    if x < 1 or nums is None:
+    """x - rounds
+    nums - numbers list
+    """
+    if x <= 0 or nums is None:
         return None
-    n = max(nums)
-    primes = [True for _ in range(max(n + 1, 2))]
-    primes[0], primes[1] = False, False
-    for i in range(2, int(n ** 0.5) + 1):
-        if primes[i]:
-            for j in range(i * i, n + 1, i):
-                primes[j] = False
-    primes_count = [0 for _ in range(len(primes))]
-    count = 0
-    for i in range(len(primes)):
-        if primes[i]:
-            count += 1
-        primes_count[i] = count
-    player = 0
+    if x != len(nums):
+        return None
+
+    ben = 0
+    maria = 0
+
+    a = [1 for x in range(sorted(nums)[-1] + 1)]
+    a[0], a[1] = 0, 0
+    for i in range(2, len(a)):
+        rm_multiples(a, i)
+
     for i in nums:
-        player += primes_count[i] % 2 == 1
-    if player * 2 == len(nums):
-        return None
-    if player * 2 == len(nums) - 1:
+        if sum(a[0:i + 1]) % 2 == 0:
+            ben += 1
+        else:
+            maria += 1
+    if ben > maria:
+        return "Ben"
+    if maria > ben:
         return "Maria"
-    return "Ben"
+    return None
+
+
+def rm_multiples(ls, x):
+    """removes multiple
+    of primes
+    """
+    for i in range(2, len(ls)):
+        try:
+            ls[i * x] = 0
+        except (ValueError, IndexError):
+            break
